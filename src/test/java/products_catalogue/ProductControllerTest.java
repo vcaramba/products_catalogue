@@ -94,21 +94,10 @@ public class ProductControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        Product productBefore = new Product("Before update");
-        productBefore.setId(1L);
-        Product productAfter = new Product("After update");
-
-        List<Product> list = new ArrayList<>(Arrays.asList(productBefore, productAfter));
-        when(productRepository.findAll()).thenReturn(list);
-
-        List<Product> result = productController.getAllProducts();
-
-        assertThat(productRepository.findById(result.get(0).getId()).isPresent());
-        assertThat(productRepository.findById(result.get(1).getId()).isPresent());
-
-
-        productController.updateProduct(productAfter, productBefore.getId());
-//        assertThat(productRepository.findById(result.get(0).getId()).get().getName().equals(productAfter.getName()));
+        Product product = new Product("Product name");
+        product.setId(1L);
+        ResponseEntity<Object> responseEntity = productController.updateProduct(product, product.getId());
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
     }
 
     @Test

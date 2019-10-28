@@ -93,21 +93,10 @@ public class CategoryControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        Category categoryBefore = new Category("Before update");
-        categoryBefore.setId(1L);
-        Category categoryAfter = new Category("After update");
-
-        List<Category> list = new ArrayList<>(Arrays.asList(categoryBefore, categoryAfter));
-        when(categoryRepository.findAll()).thenReturn(list);
-
-        List<Category> result = categoryController.getAllCategories();
-
-        assertThat(categoryRepository.findById(result.get(0).getId()).isPresent());
-        assertThat(categoryRepository.findById(result.get(1).getId()).isPresent());
-
-
-        categoryController.updateCategory(categoryAfter, categoryBefore.getId());
-//        assertThat(productRepository.findById(result.get(0).getId()).get().getName().equals(productAfter.getName()));
+        Category category = new Category("Category name");
+        category.setId(1L);
+        ResponseEntity<Object> responseEntity = categoryController.updateCategory(category, category.getId());
+        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(200);
     }
 
     @Test

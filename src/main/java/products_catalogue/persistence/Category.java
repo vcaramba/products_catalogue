@@ -20,7 +20,7 @@ public class Category {
                     CascadeType.MERGE
             },
             mappedBy = "categories")
-    private Set<Product> productEntities = new HashSet<>();
+    private Set<Product> products = new HashSet<>();
 
     public Category() {
     }
@@ -29,12 +29,12 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Product> getProductEntities() {
-        return productEntities;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public void setProductEntities(Set<Product> productEntities) {
-        this.productEntities = productEntities;
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     public Long getId() {

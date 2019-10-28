@@ -1,18 +1,19 @@
 package products_catalogue.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import products_catalogue.dao.ProductRepository;
 import products_catalogue.exceptions.ProductNotFoundException;
 import products_catalogue.persistence.Product;
-import products_catalogue.dao.ProductRepository;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/products")
+@RequestMapping(path = "/products", produces = {"application/json", "text/xml"})
 public class ProductController {
     private final ProductRepository productRepository;
 
@@ -20,12 +21,12 @@ public class ProductController {
         this.productRepository = productRepository;
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping()
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    @GetMapping(path = "/{id}", produces = "application/json")
+    @GetMapping(path = "/{id}")
     public Product getProduct(@PathVariable long id) {
         Optional<Product> product = productRepository.findById(id);
 
@@ -35,12 +36,12 @@ public class ProductController {
         return product.get();
     }
 
-    @DeleteMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
+    @DeleteMapping(path = "/{id}")
     public void deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping()
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
         Product savedProduct = productRepository.save(product);
 
@@ -51,18 +52,11 @@ public class ProductController {
 
     }
 
-    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable long id) {
-
-        Optional<Product> productOptional = productRepository.findById(id);
-
-        if (!productOptional.isPresent())
-            return ResponseEntity.notFound().build();
-
+        productRepository.deleteById(id);
         product.setId(id);
-
         productRepository.save(product);
-
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
     }
 }

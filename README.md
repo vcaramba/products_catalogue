@@ -4,10 +4,15 @@
 - mvn clean install
 
 # Run application:
--
+- mvn spring-boot:run
+- or run ApiLauncher class from IDE
 
-# To access the API:
-https://localhost:8080
+# Access the API:
+https://localhost:8080/{desired-endpoint-here}
 
-# To check H2 database:
+# Authenticate for accessing endpoints:
+- user: admin
+- password: password
+
+# Check H2 database:
 http://localhost:8080/h2-console
