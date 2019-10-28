@@ -1,4 +1,4 @@
-package ee.products_catalogue.restful;
+package products_catalogue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

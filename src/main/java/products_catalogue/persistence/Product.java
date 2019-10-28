@@ -1,4 +1,4 @@
-package ee.products_catalogue.restful.model;
+package products_catalogue.persistence;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

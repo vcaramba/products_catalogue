@@ -1,28 +1,32 @@
-package ee.products_catalogue.restful.controller;
+package products_catalogue.controller;
 
-import ee.products_catalogue.restful.exceptions.UserNotFoundException;
-import ee.products_catalogue.restful.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import products_catalogue.exceptions.UserNotFoundException;
+import products_catalogue.persistence.User;
+import products_catalogue.dao.UserRepository;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "/users")
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @GetMapping("/users")
-    public List<User> retrieveAllUsers() {
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @GetMapping(produces = "application/json")
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable long id) {
+    @GetMapping(path = "/{id}", produces = "application/json")
+    public User getUser(@PathVariable long id) {
         Optional<User> user = userRepository.findById(id);
 
         if (!user.isPresent())
@@ -31,12 +35,12 @@ public class UserController {
         return user.get();
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public void deleteUser(@PathVariable long id) {
         userRepository.deleteById(id);
     }
 
-    @PostMapping("/users")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> createUser(@RequestBody User user) {
         User savedUser = userRepository.save(user);
 
@@ -47,7 +51,7 @@ public class UserController {
 
     }
 
-    @PutMapping("/users/{id}")
+    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable long id) {
 
         Optional<User> userOptional = userRepository.findById(id);

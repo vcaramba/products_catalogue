@@ -1,6 +1,6 @@
-package ee.products_catalogue.restful.controller;
+package products_catalogue.dao;
 
-import ee.products_catalogue.restful.model.Product;
+import products_catalogue.persistence.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

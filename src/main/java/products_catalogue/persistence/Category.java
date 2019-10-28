@@ -1,4 +1,4 @@
-package ee.products_catalogue.restful.model;
+package products_catalogue.persistence;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -20,7 +20,7 @@ public class Category {
                     CascadeType.MERGE
             },
             mappedBy = "categories")
-    private Set<Product> products = new HashSet<>();
+    private Set<Product> productEntities = new HashSet<>();
 
     public Category() {
     }
@@ -29,12 +29,12 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Set<Product> getProductEntities() {
+        return productEntities;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setProductEntities(Set<Product> productEntities) {
+        this.productEntities = productEntities;
     }
 
     public Long getId() {

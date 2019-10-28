@@ -1,4 +1,4 @@
-package ee.products_catalogue.restful.exceptions;
+package products_catalogue.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String exception) {

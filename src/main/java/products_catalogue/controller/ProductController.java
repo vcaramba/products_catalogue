@@ -1,28 +1,32 @@
-package ee.products_catalogue.restful.controller;
+package products_catalogue.controller;
 
-import ee.products_catalogue.restful.exceptions.ProductNotFoundException;
-import ee.products_catalogue.restful.model.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import products_catalogue.exceptions.ProductNotFoundException;
+import products_catalogue.persistence.Product;
+import products_catalogue.dao.ProductRepository;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "/products")
 public class ProductController {
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @GetMapping("/products")
-    public List<Product> retrieveAllProducts() {
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @GetMapping(produces = "application/json")
+    public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
-    @GetMapping("/products/{id}")
-    public Product retrieveProduct(@PathVariable long id) {
+    @GetMapping(path = "/{id}", produces = "application/json")
+    public Product getProduct(@PathVariable long id) {
         Optional<Product> product = productRepository.findById(id);
 
         if (!product.isPresent())
@@ -31,12 +35,12 @@ public class ProductController {
         return product.get();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public void deleteProduct(@PathVariable long id) {
         productRepository.deleteById(id);
     }
 
-    @PostMapping("/products")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> createProduct(@RequestBody Product product) {
         Product savedProduct = productRepository.save(product);
 
@@ -47,7 +51,7 @@ public class ProductController {
 
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> updateProduct(@RequestBody Product product, @PathVariable long id) {
 
         Optional<Product> productOptional = productRepository.findById(id);

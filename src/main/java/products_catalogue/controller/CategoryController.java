@@ -1,28 +1,32 @@
-package ee.products_catalogue.restful.controller;
+package products_catalogue.controller;
 
-import ee.products_catalogue.restful.exceptions.CategoryNotFoundException;
-import ee.products_catalogue.restful.model.Category;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import products_catalogue.exceptions.CategoryNotFoundException;
+import products_catalogue.persistence.Category;
+import products_catalogue.dao.CategoryRepository;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(path = "/categories")
 public class CategoryController {
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @GetMapping("/categories")
-    public List<Category> retrieveAllCategories() {
+    public CategoryController(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
+    @GetMapping(produces = "application/json")
+    public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    @GetMapping("/categories/{id}")
-    public Category retrieveCategory(@PathVariable long id) {
+    @GetMapping(path = "/{id}", produces = "application/json")
+    public Category getCategory(@PathVariable long id) {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (!category.isPresent())
@@ -31,12 +35,12 @@ public class CategoryController {
         return category.get();
     }
 
-    @DeleteMapping("/categories/{id}")
+    @DeleteMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public void deleteCategory(@PathVariable long id) {
         categoryRepository.deleteById(id);
     }
 
-    @PostMapping("/categories")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> createCategory(@RequestBody Category category) {
         Category savedCategory = categoryRepository.save(category);
 
@@ -47,7 +51,7 @@ public class CategoryController {
 
     }
 
-    @PutMapping("/categories/{id}")
+    @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Object> updateCategory(@RequestBody Category category, @PathVariable long id) {
 
         Optional<Category> categoryOptional = categoryRepository.findById(id);
